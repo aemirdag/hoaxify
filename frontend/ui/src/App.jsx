@@ -20,12 +20,14 @@ function App() {
                 {t("signUp")}
               </Link>
             </li>
+            <li className="nav-item">
+              <LanguageSelector />
+            </li>
           </lu>
         </div>
       </nav>
       <div className="container mt-3">
         <Outlet />
-        <LanguageSelector />
       </div>
     </>
   );

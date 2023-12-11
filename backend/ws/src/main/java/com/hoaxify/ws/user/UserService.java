@@ -2,6 +2,7 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.email.EmailService;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
+import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -36,5 +37,18 @@ public class UserService {
         } catch (MailException e) {
             throw new ActivationNotificationException();
         }
+    }
+
+    @Transactional(rollbackOn = UserTokenNotFoundException.class)
+    public void activateUser(String token) {
+        User inDB = userRepository.findByActivationToken(token);
+
+        if (inDB == null) {
+            throw new UserTokenNotFoundException(token);
+        }
+
+        inDB.setActive(true);
+        inDB.setActivationToken(null);
+        userRepository.save(inDB);
     }
 }

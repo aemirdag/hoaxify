@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -41,13 +42,11 @@ public class UserService {
 
     @Transactional(rollbackOn = UserTokenNotFoundException.class)
     public void activateUser(String token) {
-        User inDB = userRepository.findByActivationToken(token);
+        User inDB = userRepository
+                .findByActivationToken(token)
+                .orElseThrow(() -> new UserTokenNotFoundException(token));
 
-        if (inDB == null) {
-            throw new UserTokenNotFoundException(token);
-        }
-
-        inDB.setActive(true);
+        inDB.setActive(Boolean.TRUE);
         inDB.setActivationToken(null);
         userRepository.save(inDB);
     }

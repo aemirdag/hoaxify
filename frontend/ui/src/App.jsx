@@ -1,31 +1,13 @@
-import { Link, Outlet } from "react-router-dom";
-import logo from "./assets/hoaxify.png";
-import { LanguageSelector } from "./shared/components/LanguageSelector";
+import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NavBar } from "./shared/components/NavBar";
 
 function App() {
   const { t } = useTranslation();
 
   return (
     <>
-      <nav className="navbar navbar-expand bg-body-tertiary shadow-sm">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            <img src={logo} width={60} />
-            Hoaxify
-          </Link>
-          <lu className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link" to="/signup">
-                {t("signUp")}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <LanguageSelector />
-            </li>
-          </lu>
-        </div>
-      </nav>
+      <NavBar />
       <div className="container mt-3">
         <Outlet />
       </div>

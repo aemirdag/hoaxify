@@ -3,6 +3,8 @@ import { useEffect, useState, useMemo, useTransition } from "react";
 import { signUp } from "./api";
 import { Input } from "./components/input";
 import { useTranslation } from "react-i18next";
+import { Alert } from "@/shared/components/Alert";
+import { Spinner } from "@/shared/components/Spinner";
 
 export function SignUp() {
   const [username, setUsername] = useState("");
@@ -112,11 +114,9 @@ export function SignUp() {
               onChange={(event) => setPasswordRepeat(event.target.value)}
             />
             <div>
-              {successMessage && (
-                <div className="alert alert-success">{successMessage}</div>
-              )}
+              {successMessage && <Alert>{successMessage}</Alert>}
               {generalErrorMessage && (
-                <div className="alert alert-danger">{generalErrorMessage}</div>
+                <Alert styleType="danger">{generalErrorMessage}</Alert>
               )}
             </div>
             <div className="text-center">
@@ -128,10 +128,7 @@ export function SignUp() {
                 class="btn btn-primary"
               >
                 {apiProgress && (
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    aria-hidden="true"
-                  ></span>
+                  <Spinner sm={true} />
                 )}
                 {t("signUp")}
               </button>

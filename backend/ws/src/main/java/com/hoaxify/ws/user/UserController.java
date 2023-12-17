@@ -30,6 +30,14 @@ public class UserController {
         return ResponseEntity.ok(new GenericMessage(message));
     }
 
+    @GetMapping("/api/v1/users/{token}/get")
+    ResponseEntity<GenericMessage> gget(@PathVariable String token) {
+        userService.activateUser(token);
+
+        String message = Messages.getMessageForLocale("hoaxify.create.user.activate");
+        return ResponseEntity.ok(new GenericMessage(message));
+    }
+
     @PatchMapping("/api/v1/users/{token}/active")
     ResponseEntity<GenericMessage> activateUser(@PathVariable String token) {
         userService.activateUser(token);
@@ -39,6 +47,7 @@ public class UserController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+
     ResponseEntity<ApiError> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
         String message = Messages.getMessageForLocale("hoaxify.error.validation");
 

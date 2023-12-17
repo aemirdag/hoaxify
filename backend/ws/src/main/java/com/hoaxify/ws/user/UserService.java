@@ -5,12 +5,13 @@ import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -49,5 +50,9 @@ public class UserService {
         inDB.setActive(Boolean.TRUE);
         inDB.setActivationToken(null);
         userRepository.save(inDB);
+    }
+
+    public Page<User> getUsers(Pageable page) {
+        return userRepository.findAll(page);
     }
 }

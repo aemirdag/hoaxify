@@ -13,7 +13,7 @@ export function NavBar() {
           <img src={logo} width={60} />
           Hoaxify
         </Link>
-        <lu className="navbar-nav">
+        <ul className="navbar-nav">
           <li className="nav-item">
             <Link className="nav-link" to="/signup">
               {t("signUp")}
@@ -22,7 +22,7 @@ export function NavBar() {
           <li className="nav-item">
             <LanguageSelector />
           </li>
-        </lu>
+        </ul>
       </div>
     </nav>
   );

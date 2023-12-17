@@ -4,10 +4,13 @@ import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericMessage;
 import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.dto.UserCreate;
+import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,14 +33,6 @@ public class UserController {
         return ResponseEntity.ok(new GenericMessage(message));
     }
 
-    @GetMapping("/api/v1/users/{token}/get")
-    ResponseEntity<GenericMessage> gget(@PathVariable String token) {
-        userService.activateUser(token);
-
-        String message = Messages.getMessageForLocale("hoaxify.create.user.activate");
-        return ResponseEntity.ok(new GenericMessage(message));
-    }
-
     @PatchMapping("/api/v1/users/{token}/active")
     ResponseEntity<GenericMessage> activateUser(@PathVariable String token) {
         userService.activateUser(token);
@@ -46,8 +41,12 @@ public class UserController {
         return ResponseEntity.ok(new GenericMessage(message));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @GetMapping("/api/v1/users")
+    ResponseEntity<Page<UserDTO>> getUsers(Pageable page) {
+        return ResponseEntity.ok(userService.getUsers(page).map(UserDTO::new));
+    }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiError> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
         String message = Messages.getMessageForLocale("hoaxify.error.validation");
 

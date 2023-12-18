@@ -1,13 +1,13 @@
 package com.hoaxify.ws.user.dto;
 
 import com.hoaxify.ws.user.User;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private Long id;
     private String username;

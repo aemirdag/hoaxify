@@ -2,6 +2,7 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.email.EmailService;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
+import com.hoaxify.ws.user.exception.UserNotFoundException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,9 @@ public class UserService {
 
     public Page<User> getUsers(Pageable page) {
         return userRepository.findAll(page);
+    }
+
+    public User getUser(long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 }

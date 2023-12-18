@@ -6,8 +6,12 @@ import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.dto.UserCreate;
 import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
+import com.hoaxify.ws.user.exception.UserNotFoundException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
-    final private UserService userService;
+    private final UserService userService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     UserController(UserService userService) {
@@ -46,6 +51,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers(page).map(UserDTO::new));
     }
 
+    @GetMapping("/api/v1/users/{id}")
+    ResponseEntity<UserDTO> getUser(@PathVariable long id) {
+        User user = userService.getUser(id);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+        return ResponseEntity.ok(userDTO);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiError> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
         String message = Messages.getMessageForLocale("hoaxify.error.validation");
@@ -63,25 +76,31 @@ public class UserController {
     }
 
     @ExceptionHandler(ActivationNotificationException.class)
-    ResponseEntity<ApiError> handleActivationNotificationException(ActivationNotificationException e) {
-        String message = e.getMessage();
-
+    ResponseEntity<ApiError> handleActivationNotificationException(ActivationNotificationException e, HttpServletRequest request) {
         ApiError apiError = ApiError.getApiError()
-                .setPath("/api/v1/users")
-                .setMessage(message)
+                .setPath(request.getRequestURI())
+                .setMessage(e.getMessage())
                 .setStatus(HttpStatus.BAD_GATEWAY.value());
 
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(apiError);
     }
 
     @ExceptionHandler(UserTokenNotFoundException.class)
-    ResponseEntity<ApiError> handleUserTokenNotFoundException(UserTokenNotFoundException e) {
-        String message = Messages.getMessageForLocale("hoaxify.create.user.token.find.failure");
-
+    ResponseEntity<ApiError> handleUserTokenNotFoundException(UserTokenNotFoundException e, HttpServletRequest request) {
         ApiError apiError = ApiError.getApiError()
-                .setPath("/api/v1/users/" + e.getToken() + "active")
-                .setMessage(message)
+                .setPath(request.getRequestURI())
+                .setMessage(e.getMessage())
                 .setStatus(HttpStatus.BAD_REQUEST.value());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException e, HttpServletRequest request) {
+        ApiError apiError = ApiError.getApiError()
+                .setPath(request.getRequestURI())
+                .setMessage(e.getMessage())
+                .setStatus(HttpStatus.NOT_FOUND.value());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }

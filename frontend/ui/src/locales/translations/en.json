@@ -6,5 +6,8 @@
   "passwordRepeat": "Password Repeat",
   "passwordMismatch": "Password mismatch",
   "genericError": "Unexpected error occured. Please try again",
-  "activation": "Activation"
+  "activation": "Activation",
+  "userList": "User List",
+  "next": "Next",
+  "previous": "Previous"
 }

@@ -6,5 +6,8 @@
   "passwordRepeat": "Şifre Tekrarı",
   "passwordMismatch": "Şifre eşleşmiyor",
   "genericError": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
-  "activation": "Aktifleştirme"
+  "activation": "Aktifleştirme",
+  "userList": "Kullanıcı Listesi",
+  "next": "İleri",
+  "previous": "Geri"
 }

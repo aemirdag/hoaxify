@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
     private final UserService userService;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     UserController(UserService userService) {
@@ -54,18 +53,16 @@ public class UserController {
     @GetMapping("/api/v1/users/{id}")
     ResponseEntity<UserDTO> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        UserDTO userDTO = userService.mapModel(user);
 
         return ResponseEntity.ok(userDTO);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiError> handleMethodArgNotValidException(MethodArgumentNotValidException e) {
-        String message = Messages.getMessageForLocale("hoaxify.error.validation");
-
         ApiError apiError = ApiError.getApiError()
                 .setPath("/api/v1/users")
-                .setMessage(message)
+                .setMessage(Messages.getMessageForLocale("hoaxify.error.validation"))
                 .setStatus(HttpStatus.BAD_REQUEST.value());
 
         for (var fieldError : e.getBindingResult().getFieldErrors()) {

@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { NavBar } from "./shared/components/NavBar";
 
 function App() {
-  const { t } = useTranslation();
-
   return (
     <>
       <NavBar />

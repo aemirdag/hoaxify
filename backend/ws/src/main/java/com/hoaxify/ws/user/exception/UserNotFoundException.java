@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class UserNotFoundException extends RuntimeException {
-    private final long id;
-
     public UserNotFoundException(long id) {
-        super(Messages.getMessageForLocale("hoaxify.user.not.found", id));
-        this.id = id;
+        super(Messages.getMessageForLocale("hoaxify.user.id.not.found", id));
+    }
+
+    public UserNotFoundException(String email) {
+        super(Messages.getMessageForLocale("hoaxify.user.email.not.found", email));
     }
 }

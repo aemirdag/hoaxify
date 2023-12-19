@@ -1,10 +1,12 @@
 package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.email.EmailService;
+import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserNotFoundException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +15,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
-    final private UserRepository userRepository;
-    final private EmailService emailService;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -59,5 +63,13 @@ public class UserService {
 
     public User getUser(long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public UserDTO mapModel(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 }

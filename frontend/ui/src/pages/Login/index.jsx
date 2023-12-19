@@ -1,31 +1,18 @@
-import axios from "axios";
-import { useEffect, useState, useMemo, useTransition } from "react";
-import { signUp } from "./api";
-import { Input } from "../../shared/components/Input";
-import { useTranslation } from "react-i18next";
-import { Alert } from "@/shared/components/Alert";
 import { Spinner } from "@/shared/components/Spinner";
+import { Input } from "../../shared/components/Input";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { loginUser } from "./api";
+import { Alert } from "@/shared/components/Alert";
 import { Button } from "@/shared/components/Button";
 
-export function SignUp() {
-  const [username, setUsername] = useState("");
+export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [generalErrorMessage, setGeneralError] = useState("");
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setErrors((lastErrors) => {
-      return {
-        ...lastErrors,
-        username: undefined,
-      };
-    });
-  }, [username]);
 
   useEffect(() => {
     setErrors((lastErrors) => {
@@ -45,22 +32,12 @@ export function SignUp() {
     });
   }, [password]);
 
-  const passwordRepeatError = useMemo(() => {
-    if (password && password !== passwordRepeat) {
-      return t("passwordMismatch");
-    }
-
-    return "";
-  }, [password, passwordRepeat]);
-
   const onSubmit = async (event) => {
     event.preventDefault();
     setApiProgress(true);
-    setSuccessMessage("");
     setGeneralError("");
     try {
-      const response = await signUp({
-        username,
+      const response = await loginUser({
         email,
         password,
       });
@@ -83,16 +60,9 @@ export function SignUp() {
       <div className="col-lg-6 col-sm-8">
         <form className="card" onSubmit={onSubmit}>
           <div className="text-center card-header">
-            <h1>{t("signUp")}</h1>
+            <h1>{t("login")}</h1>
           </div>
           <div className="card-body">
-            <Input
-              id="username"
-              label={t("username")}
-              type="text"
-              error={errors.username}
-              onChange={(event) => setUsername(event.target.value)}
-            />
             <Input
               id="email"
               label={t("email")}
@@ -107,25 +77,17 @@ export function SignUp() {
               error={errors.password}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <Input
-              id="passwordRepeat"
-              label={t("passwordRepeat")}
-              type="password"
-              error={passwordRepeatError}
-              onChange={(event) => setPasswordRepeat(event.target.value)}
-            />
             <div>
-              {successMessage && <Alert>{successMessage}</Alert>}
               {generalErrorMessage && (
                 <Alert styleType="danger">{generalErrorMessage}</Alert>
               )}
             </div>
             <Button
               center
-              disabled={apiProgress || !password || password !== passwordRepeat}
+              disabled={apiProgress || !password || !email}
               type={"submit"}
               apiProgress={apiProgress}
-              text={t("signUp")}
+              text={t("login")}
             />
           </div>
         </form>

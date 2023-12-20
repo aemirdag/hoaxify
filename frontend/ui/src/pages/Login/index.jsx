@@ -43,7 +43,6 @@ export function Login() {
       });
       setSuccessMessage(response.data.message);
     } catch (error) {
-      console.log(error.response);
       if (error.response?.data && error.response.status === 400) {
         setErrors(error.response.data.validationErrors);
       } else if (error.response?.data && error.response.status !== 400) {

@@ -43,9 +43,10 @@ export function Login() {
       });
       setSuccessMessage(response.data.message);
     } catch (error) {
-      if (error.response?.data && error.response.data.status === 400) {
+      console.log(error.response);
+      if (error.response?.data && error.response.status === 400) {
         setErrors(error.response.data.validationErrors);
-      } else if (error.response?.data && error.response.data.status !== 400) {
+      } else if (error.response?.data && error.response.status !== 400) {
         setGeneralError(error.response.data.message);
       } else {
         setGeneralError(t("genericError"));

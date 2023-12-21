@@ -10,5 +10,8 @@
   "userList": "Kullanıcı Listesi",
   "next": "İleri",
   "previous": "Geri",
-  "login": "Giriş Yap"
+  "login": "Giriş Yap",
+  "myProfile": "Profilim",
+  "logOut": "Çıkış Yap",
+  "edit": "Düzenle"
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Alert } from "@/shared/components/Alert";
 import { Spinner } from "@/shared/components/Spinner";
 import { useRouteParamApiRequest } from "@/shared/hooks/useRouteParamApiRequest";
-import { ProfileCard } from "./components/ProfileCard";
+import { ProfileCard } from "./components/ProfileCard/ProfileCard.jsx";
 
 export function User() {
   const {

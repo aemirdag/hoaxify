@@ -1,10 +1,11 @@
-import { Spinner } from "@/shared/components/Spinner";
 import { Input } from "../../shared/components/Input";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { loginUser } from "./api";
 import { Alert } from "@/shared/components/Alert";
 import { Button } from "@/shared/components/Button";
+import { AuthContext } from "@/shared/state/context.jsx";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,8 @@ export function Login() {
   const [errors, setErrors] = useState({});
   const [generalErrorMessage, setGeneralError] = useState("");
   const { t } = useTranslation();
+  const authState = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setErrors((lastErrors) => {
@@ -41,7 +44,8 @@ export function Login() {
         email,
         password,
       });
-      setSuccessMessage(response.data.message);
+      authState.dispatch({ type: "login-success", data: response.data.user });
+      navigate("/");
     } catch (error) {
       if (error.response?.data && error.response.status === 400) {
         setErrors(error.response.data.validationErrors);

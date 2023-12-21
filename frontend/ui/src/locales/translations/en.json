@@ -10,5 +10,8 @@
   "userList": "User List",
   "next": "Next",
   "previous": "Previous",
-  "login": "Login"
+  "login": "Login",
+  "myProfile": "My Profile",
+  "logOut": "Log Out",
+  "edit": "Edit"
 }

@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home } from "@/pages/Home";
-import { SignUp } from "@/pages/SignUp";
+import { Home } from "@/pages/Home/Home.jsx";
+import { SignUp } from "@/pages/SignUp/SignUp.jsx";
 import App from "@/App";
-import { Activation } from "@/pages/Activation";
-import { User } from "@/pages/User";
-import { Login } from "@/pages/Login";
+import { Activation } from "@/pages/Activation/Activation.jsx";
+import { User } from "@/pages/User/User.jsx";
+import { Login } from "@/pages/Login/Login.jsx";
 
 export default createBrowserRouter([
   {

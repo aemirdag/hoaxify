@@ -1,7 +1,17 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { loadAuthState, storeAuthState } from "@/shared/state/storage.js";
+import { use } from "i18next";
 
 export const AuthContext = createContext();
+export const AuthDispatchContext = createContext();
+
+export function useAuthState() {
+  return useContext(AuthContext);
+}
+
+export function useAuthDispatch() {
+  return useContext(AuthDispatchContext);
+}
 
 const authReducer = (authState, action) => {
   switch (action.type) {
@@ -25,10 +35,11 @@ export function AuthenticationContext({ children }) {
     <AuthContext.Provider
       value={{
         ...authState,
-        dispatch,
       }}
     >
-      {children}
+      <AuthDispatchContext.Provider value={dispatch}>
+        {children}
+      </AuthDispatchContext.Provider>
     </AuthContext.Provider>
   );
 }

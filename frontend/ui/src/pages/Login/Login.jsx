@@ -1,11 +1,13 @@
 import { Input } from "../../shared/components/Input";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { loginUser } from "./api";
 import { Alert } from "@/shared/components/Alert";
 import { Button } from "@/shared/components/Button";
-import { AuthContext } from "@/shared/state/context.jsx";
+//import { useAuthDispatch } from "@/shared/state/context.jsx";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/shared/state/redux.js";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +16,8 @@ export function Login() {
   const [errors, setErrors] = useState({});
   const [generalErrorMessage, setGeneralError] = useState("");
   const { t } = useTranslation();
-  const authState = useContext(AuthContext);
+  //const authDispatch = useAuthDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +47,7 @@ export function Login() {
         email,
         password,
       });
-      authState.dispatch({ type: "login-success", data: response.data.user });
+      dispatch(loginSuccess(response.data.user));
       navigate("/");
     } catch (error) {
       if (error.response?.data && error.response.status === 400) {

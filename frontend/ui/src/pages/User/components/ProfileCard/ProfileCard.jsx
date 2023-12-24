@@ -1,11 +1,12 @@
 import defaultProfileImage from "@/assets/profile.png";
-import { useContext } from "react";
-import { AuthContext } from "@/shared/state/context.jsx";
+//import { useAuthState } from "@/shared/state/context.jsx";
 import { Button } from "@/shared/components/Button.jsx";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 export function ProfileCard({ user }) {
-  const authState = useContext(AuthContext);
+  //const authState = useAuthState();
+  const authState = useSelector((store) => store.auth);
   const { t } = useTranslation();
 
   return (

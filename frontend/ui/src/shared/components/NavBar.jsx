@@ -2,16 +2,20 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/hoaxify.png";
 import { LanguageSelector } from "./LanguageSelector";
-import { useContext } from "react";
-import { AuthContext } from "@/shared/state/context.jsx";
+//import { useAuthDispatch, useAuthState } from "@/shared/state/context.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutSuccess } from "@/shared/state/redux.js";
 
 export function NavBar() {
   const { t } = useTranslation();
-  const authState = useContext(AuthContext);
+  //const authState = useAuthState();
+  //const authDispatch = useAuthDispatch();
+  const authState = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onClickLogout = () => {
-    authState.dispatch({ type: "logout-success" });
+    dispatch(logoutSuccess());
     navigate("/");
   };
 

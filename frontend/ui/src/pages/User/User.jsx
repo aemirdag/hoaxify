@@ -1,6 +1,4 @@
-import { useParams } from "react-router-dom";
 import { getUser } from "./api";
-import { useEffect, useState } from "react";
 import { Alert } from "@/shared/components/Alert";
 import { Spinner } from "@/shared/components/Spinner";
 import { useRouteParamApiRequest } from "@/shared/hooks/useRouteParamApiRequest";

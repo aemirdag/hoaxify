@@ -13,5 +13,7 @@
   "login": "Giriş Yap",
   "myProfile": "Profilim",
   "logOut": "Çıkış Yap",
-  "edit": "Düzenle"
+  "edit": "Düzenle",
+  "save": "Kaydet",
+  "cancel": "İptal"
 }

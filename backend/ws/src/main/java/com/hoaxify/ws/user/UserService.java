@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,8 +58,12 @@ public class UserService {
         userRepository.save(inDB);
     }
 
-    public Page<User> getUsers(Pageable page) {
-        return userRepository.findAll(page);
+    public Page<User> getUsers(Pageable page, User loggedInUser) {
+        if (Objects.isNull(loggedInUser)) {
+            return userRepository.findAll(page);
+        }
+
+        return userRepository.findByIdNot(loggedInUser.getId(), page);
     }
 
     public User getUser(long id) {

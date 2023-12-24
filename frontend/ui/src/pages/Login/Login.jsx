@@ -47,7 +47,7 @@ export function Login() {
         email,
         password,
       });
-      dispatch(loginSuccess(response.data.user));
+      dispatch(loginSuccess(response.data));
       navigate("/");
     } catch (error) {
       if (error.response?.data && error.response.status === 400) {

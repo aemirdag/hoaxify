@@ -13,5 +13,7 @@
   "login": "Login",
   "myProfile": "My Profile",
   "logOut": "Log Out",
-  "edit": "Edit"
+  "edit": "Edit",
+  "save": "Save",
+  "cancel": "Cancel"
 }

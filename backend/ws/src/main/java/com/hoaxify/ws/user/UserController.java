@@ -1,5 +1,6 @@
 package com.hoaxify.ws.user;
 
+import com.hoaxify.ws.auth.token.TokenService;
 import com.hoaxify.ws.shared.GenericMessage;
 import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.dto.UserCreate;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final TokenService tokenService;
 
     @Autowired
-    UserController(UserService userService) {
+    UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/api/v1/users")
@@ -37,8 +40,11 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    public ResponseEntity<Page<UserDTO>> getUsers(Pageable page) {
-        return ResponseEntity.ok(userService.getUsers(page).map(UserDTO::new));
+    public ResponseEntity<Page<UserDTO>> getUsers(Pageable page,
+                                                  @RequestHeader(value = "Authorization", required = false)
+                                                  String authorizationHeader) {
+        User loggedInUser = tokenService.verifyToken(authorizationHeader);
+        return ResponseEntity.ok(userService.getUsers(page, loggedInUser).map(UserDTO::new));
     }
 
     @GetMapping("/api/v1/users/{id}")

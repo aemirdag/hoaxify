@@ -2,6 +2,7 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.email.EmailService;
 import com.hoaxify.ws.user.dto.UserDTO;
+import com.hoaxify.ws.user.dto.UserUpdate;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserNotFoundException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
@@ -72,6 +73,13 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public User updateUser(long id, UserUpdate userUpdate) {
+        User inDB = getUser(id);
+        inDB.setUsername(userUpdate.username());
+
+        return userRepository.save(inDB);
     }
 
     public UserDTO mapModel(User user) {

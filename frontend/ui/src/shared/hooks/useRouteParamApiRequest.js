@@ -23,7 +23,7 @@ export function useRouteParamApiRequest(param, httpFunction) {
     }
 
     sendRequest();
-  }, [pathParam]);
+  }, [httpFunction, pathParam]);
 
   return { apiProgress, data, error };
 }

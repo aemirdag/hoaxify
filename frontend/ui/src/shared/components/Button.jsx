@@ -6,11 +6,11 @@ export function Button({
   type = "button",
   apiProgress = false,
   text,
-  onClick = null,
+  onClick,
   styleType = "primary",
 }) {
   return (
-    <div className={`${center ? "text-center" : ""}`}>
+    <div className={`d-inline m-1 ${center ? "text-center" : ""}`}>
       <button
         disabled={disabled}
         type={type}

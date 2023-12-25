@@ -14,7 +14,7 @@ const authSlice = createSlice({
 
       setToken(action.payload.token);
     },
-    logoutSuccess: (state, action) => {
+    logoutSuccess: (state) => {
       state.id = 0;
       delete state.username;
       delete state.email;
@@ -22,10 +22,17 @@ const authSlice = createSlice({
 
       setToken();
     },
+    userUpdateSuccess: (state, action) => {
+      state.id = action.payload.id;
+      state.username = action.payload.username;
+      state.email = action.payload.email;
+      state.image = action.payload.image;
+    },
   },
 });
 
-export const { loginSuccess, logoutSuccess } = authSlice.actions;
+export const { loginSuccess, logoutSuccess, userUpdateSuccess } =
+  authSlice.actions;
 
 export const store = configureStore({
   reducer: {

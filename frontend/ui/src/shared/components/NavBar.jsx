@@ -5,6 +5,7 @@ import { LanguageSelector } from "./LanguageSelector";
 //import { useAuthDispatch, useAuthState } from "@/shared/state/context.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "@/shared/state/redux.js";
+import {ProfileImage} from "@/shared/components/ProfileImage.jsx";
 
 export function NavBar() {
   const { t } = useTranslation();
@@ -45,7 +46,8 @@ export function NavBar() {
             <>
               <li className="nav-item">
                 <Link className="nav-link" to={`/user/${authState.id}`}>
-                  {t("myProfile")}
+                  <ProfileImage width={30} />
+                  <span className={"ms-2"}>{authState.username}</span>
                 </Link>
               </li>
               <li className="nav-item">

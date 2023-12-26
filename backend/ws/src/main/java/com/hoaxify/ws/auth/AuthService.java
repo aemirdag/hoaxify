@@ -7,8 +7,9 @@ import com.hoaxify.ws.auth.token.Token;
 import com.hoaxify.ws.auth.token.TokenService;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
+import com.hoaxify.ws.user.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,16 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserService userService;
     private final TokenService tokenService;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public AuthService(UserService userService, TokenService tokenService) {
+    public AuthService(UserService userService, TokenService tokenService,
+                       PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userService = userService;
         this.tokenService = tokenService;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     public AuthResponse authenticate(Credentials credentials) {
@@ -33,6 +38,6 @@ public class AuthService {
 
         Token token = tokenService.createToken(inDB, credentials);
 
-        return AuthResponse.getAuthResponse(userService.mapModel(inDB), token);
+        return AuthResponse.getAuthResponse(modelMapper.map(inDB, UserDTO.class), token);
     }
 }

@@ -1,7 +1,7 @@
 package com.hoaxify.ws.user;
 
+import com.hoaxify.ws.configuration.CurrentUser;
 import com.hoaxify.ws.email.EmailService;
-import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.dto.UserUpdate;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserNotFoundException;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +23,14 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final EmailService emailService;
-    private final ModelMapper modelMapper = new ModelMapper();
-
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService(UserRepository userRepository, EmailService emailService) {
+    UserService(UserRepository userRepository, EmailService emailService,
+                PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(rollbackOn = MailException.class)
@@ -59,12 +58,12 @@ public class UserService {
         userRepository.save(inDB);
     }
 
-    public Page<User> getUsers(Pageable page, User loggedInUser) {
-        if (Objects.isNull(loggedInUser)) {
+    public Page<User> getUsers(Pageable page, CurrentUser currentUser) {
+        if (Objects.isNull(currentUser)) {
             return userRepository.findAll(page);
         }
 
-        return userRepository.findByIdNot(loggedInUser.getId(), page);
+        return userRepository.findByIdNot(currentUser.getId(), page);
     }
 
     public User getUser(long id) {
@@ -80,9 +79,5 @@ public class UserService {
         inDB.setUsername(userUpdate.username());
 
         return userRepository.save(inDB);
-    }
-
-    public UserDTO mapModel(User user) {
-        return modelMapper.map(user, UserDTO.class);
     }
 }

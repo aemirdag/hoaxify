@@ -14,17 +14,11 @@ import java.util.Collection;
 public class CurrentUser implements UserDetails {
     @Getter
     private long id;
+    private boolean active;
     private String username;
     @Getter
     private String email;
     private String password;
-
-    public CurrentUser(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,6 +52,6 @@ public class CurrentUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class WsApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run
 				(WsApplication.class, args);
@@ -30,6 +29,14 @@ public class WsApplication {
 
 				userRepository.save(user);
 			}
+
+			User user = new User();
+			user.setUsername("userTemp" + 26);
+			user.setEmail("userTemp" + 26 + "@mail.com");
+			user.setPassword(passwordEncoder.encode("P4ssword@" + 26));
+			user.setActive(Boolean.FALSE);
+
+			userRepository.save(user);
 		};
 	}
 }

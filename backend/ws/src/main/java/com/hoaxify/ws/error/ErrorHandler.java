@@ -3,7 +3,6 @@ package com.hoaxify.ws.error;
 import com.hoaxify.ws.auth.exception.AuthenticationException;
 import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
-import com.hoaxify.ws.user.exception.AuthorizationException;
 import com.hoaxify.ws.user.exception.UserNotFoundException;
 import com.hoaxify.ws.user.exception.UserTokenNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,12 +56,6 @@ public class ErrorHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Error> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(constructError(e.getMessage(), request.getRequestURI()));
-    }
-
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<Error> handleAuthorizationException(AuthorizationException e, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(constructError(e.getMessage(), request.getRequestURI()));
     }
 

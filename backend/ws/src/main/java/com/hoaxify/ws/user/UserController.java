@@ -7,13 +7,13 @@ import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.dto.UserCreate;
 import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.dto.UserUpdate;
-import com.hoaxify.ws.user.exception.AuthorizationException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,13 +63,9 @@ public class UserController {
     }
 
     @PutMapping("/api/v1/users/{id}")
+    @PreAuthorize("#id == principal.id")
     public ResponseEntity<UserDTO> updateUser(@PathVariable long id,
-                                              @Valid @RequestBody UserUpdate userUpdate,
-                                              @AuthenticationPrincipal CurrentUser currentUser) {
-        if (Objects.isNull(currentUser) || currentUser.getId() != id) {
-            throw new AuthorizationException();
-        }
-
+                                              @Valid @RequestBody UserUpdate userUpdate) {
         User user = userService.updateUser(id, userUpdate);
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 

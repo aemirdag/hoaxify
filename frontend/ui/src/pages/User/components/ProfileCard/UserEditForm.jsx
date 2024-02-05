@@ -7,7 +7,7 @@ import { updateUser } from "@/pages/User/components/ProfileCard/api.js";
 import { userUpdateSuccess } from "@/shared/state/redux.js";
 import { useDispatch, useSelector } from "react-redux";
 
-export function UserEditForm({ setIsEditMode }) {
+export function UserEditForm({ setIsEditMode, setTempImage }) {
   const authState = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -15,16 +15,48 @@ export function UserEditForm({ setIsEditMode }) {
   const [apiProgress, setApiProgress] = useState(false);
   const [errors, setErrors] = useState({});
   const [generalErrorMessage, setGeneralError] = useState("");
+  const [newImage, setNewImage] = useState("");
 
   const onChangeUsername = (event) => {
     setNewUsername(event.target.value);
-    setErrors({});
+    setErrors((lastErrors) => {
+      return {
+        ...lastErrors,
+        username: undefined,
+      };
+    });
     setGeneralError("");
   };
 
   const onClickCancel = () => {
     setIsEditMode(false);
     setNewUsername(authState.username);
+    setNewImage();
+    setTempImage("");
+  };
+
+  const onSelectImage = (event) => {
+    setErrors((lastErrors) => {
+      return {
+        ...lastErrors,
+        image: undefined,
+      };
+    });
+
+    if (event.target.files.length < 1) {
+      return;
+    }
+
+    const file = event.target.files[0];
+    const fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      const data = fileReader.result;
+      setNewImage(data);
+      setTempImage(data);
+    };
+
+    fileReader.readAsDataURL(file);
   };
 
   const onSubmit = async (event) => {
@@ -36,7 +68,9 @@ export function UserEditForm({ setIsEditMode }) {
     try {
       const response = await updateUser(authState.id, {
         username: newUsername,
+        image: newImage,
       });
+
       setIsEditMode(false);
       dispatch(userUpdateSuccess(response.data));
     } catch (error) {
@@ -59,6 +93,12 @@ export function UserEditForm({ setIsEditMode }) {
         defaultValue={authState.username}
         onChange={onChangeUsername}
         error={errors.username}
+      />
+      <Input
+        label={t("profileImage")}
+        type="file"
+        onChange={onSelectImage}
+        error={errors.image}
       />
       {generalErrorMessage && (
         <Alert styleType="danger">{generalErrorMessage}</Alert>

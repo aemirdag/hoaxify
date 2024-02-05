@@ -2,6 +2,7 @@ package com.hoaxify.ws.user;
 
 import com.hoaxify.ws.configuration.CurrentUser;
 import com.hoaxify.ws.email.EmailService;
+import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.user.dto.UserUpdate;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.UserNotFoundException;
@@ -24,13 +25,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
     @Autowired
-    UserService(UserRepository userRepository, EmailService emailService,
-                PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    UserService(UserRepository userRepository,
+                EmailService emailService,
+                PasswordEncoder passwordEncoder,
+                FileService fileService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.fileService = fileService;
     }
 
     @Transactional(rollbackOn = MailException.class)
@@ -77,6 +82,11 @@ public class UserService {
     public User updateUser(long id, UserUpdate userUpdate) {
         User inDB = getUser(id);
         inDB.setUsername(userUpdate.username());
+
+        if (Objects.nonNull(userUpdate.image()) && !userUpdate.image().isEmpty()) {
+            fileService.deleteProfileImage(inDB.getImage());
+            inDB.setImage(fileService.saveBase64StringAsFile(userUpdate.image()));
+        }
 
         return userRepository.save(inDB);
     }

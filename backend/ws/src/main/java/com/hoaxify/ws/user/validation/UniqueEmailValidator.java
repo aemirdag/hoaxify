@@ -7,7 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     UniqueEmailValidator(UserRepository userRepository) {

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -17,14 +18,16 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfiguration {
     private final AuthEntryPoint authEntryPoint;
+    private final TokenFilter tokenFilter;
 
-    public SecurityConfiguration(AuthEntryPoint authEntryPoint) {
+    public SecurityConfiguration(AuthEntryPoint authEntryPoint, TokenFilter tokenFilter) {
         this.authEntryPoint = authEntryPoint;
+        this.tokenFilter = tokenFilter;
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
+        httpSecurity
                 .authorizeHttpRequests(
                         (authentication) ->
                                 authentication
@@ -33,7 +36,9 @@ public class SecurityConfiguration {
                 .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(authEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
-                .build();
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return httpSecurity.build();
     }
 
     @Bean

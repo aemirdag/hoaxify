@@ -1,6 +1,5 @@
 package com.hoaxify.ws.user;
 
-import com.hoaxify.ws.auth.token.TokenService;
 import com.hoaxify.ws.configuration.CurrentUser;
 import com.hoaxify.ws.shared.GenericMessage;
 import com.hoaxify.ws.shared.Messages;

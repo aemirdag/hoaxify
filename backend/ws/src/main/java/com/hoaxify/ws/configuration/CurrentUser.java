@@ -20,6 +20,14 @@ public class CurrentUser implements UserDetails {
     private String email;
     private String password;
 
+    public CurrentUser(User user) {
+        id = user.getId();
+        active = user.isActive();
+        username = user.getUsername();
+        email = user.getEmail();
+        password = user.getPassword();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("ROLE_USER");

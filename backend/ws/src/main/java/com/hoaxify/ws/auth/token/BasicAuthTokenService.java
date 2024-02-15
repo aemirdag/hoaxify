@@ -4,6 +4,7 @@ import com.hoaxify.ws.auth.dto.Credentials;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@ConditionalOnProperty(name = "hoaxify.token-type", havingValue = "basic")
 public class BasicAuthTokenService implements TokenService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -27,7 +29,7 @@ public class BasicAuthTokenService implements TokenService {
     public Token createToken(User user, Credentials credentials) {
         String emailColonPassword = credentials.email() + ":" + credentials.password();
         String token = Base64.getEncoder().encodeToString(emailColonPassword.getBytes());
-        return Token.createToken("Basic", token);
+        return new Token(token, "Basic");
     }
 
     @Override

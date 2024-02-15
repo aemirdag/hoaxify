@@ -14,6 +14,8 @@ public class HoaxifyProperties {
     @Setter
     private Client client;
     private final Storage storage = new Storage();
+    @Setter
+    private String tokenType;
 
     public static record Email(
             String username,

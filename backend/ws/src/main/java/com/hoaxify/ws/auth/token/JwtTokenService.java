@@ -7,14 +7,14 @@ import com.hoaxify.ws.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Objects;
 
 @Service
-@Primary
+@ConditionalOnProperty(name = "hoaxify.token-type", havingValue = "jwt")
 public class JwtTokenService implements TokenService {
     private final SecretKey secretKey;
     private final ObjectMapper mapper;
@@ -32,7 +32,7 @@ public class JwtTokenService implements TokenService {
             String subject = mapper.writeValueAsString(tokenSubject);
             String token = Jwts.builder()
                     .subject(subject).signWith(secretKey).compact();
-            return new Token("Bearer", token);
+            return new Token(token, "Bearer");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -52,12 +52,15 @@ public class JwtTokenService implements TokenService {
 
         try {
             Jws<Claims> claimsJws = jwtParser.parseSignedClaims(token);
-            long userID = Long.parseLong(claimsJws.getPayload().getSubject());
+            String subject = claimsJws.getPayload().getSubject();
+            var tokenSubject = mapper.readValue(subject, TokenSubject.class);
+
             User user = new User();
-            user.setId(userID);
+            user.setId(tokenSubject.id());
+            user.setActive(tokenSubject.active());
 
             return user;
-        } catch (JwtException e) {
+        } catch (JwtException | JsonProcessingException e) {
             e.printStackTrace();
         }
 

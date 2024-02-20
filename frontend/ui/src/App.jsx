@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { NavBar } from "./shared/components/NavBar";
+import { NavBar } from "./shared/components/NavBar/NavBar.jsx";
 //import { AuthenticationContext } from "@/shared/state/context.jsx";
 import { Provider } from "react-redux";
 import { store } from "@/shared/state/redux.js";

@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/hoaxify.png";
-import { LanguageSelector } from "./LanguageSelector";
+import { LanguageSelector } from "../LanguageSelector.jsx";
 //import { useAuthDispatch, useAuthState } from "@/shared/state/context.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "@/shared/state/redux.js";
-import {ProfileImage} from "@/shared/components/ProfileImage.jsx";
+import { ProfileImage } from "@/shared/components/ProfileImage.jsx";
+import { logout } from "@/shared/components/NavBar/api.js";
 
 export function NavBar() {
   const { t } = useTranslation();
@@ -15,9 +16,15 @@ export function NavBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onClickLogout = () => {
-    dispatch(logoutSuccess());
-    navigate("/");
+  const onClickLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      /* empty */
+    } finally {
+      dispatch(logoutSuccess());
+      navigate("/");
+    }
   };
 
   return (

@@ -56,4 +56,9 @@ public class BasicAuthTokenService implements TokenService {
 
         return inDB;
     }
+
+    @Override
+    public void logout(String authorizationHeader) {
+
+    }
 }

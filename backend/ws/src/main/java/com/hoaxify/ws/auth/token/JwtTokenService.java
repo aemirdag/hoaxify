@@ -67,5 +67,10 @@ public class JwtTokenService implements TokenService {
         return null;
     }
 
+    @Override
+    public void logout(String authorizationHeader) {
+
+    }
+
     public static record TokenSubject(long id, boolean active) {}
 }

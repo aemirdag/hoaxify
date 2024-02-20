@@ -40,4 +40,8 @@ public class AuthService {
 
         return AuthResponse.getAuthResponse(modelMapper.map(inDB, UserDTO.class), token);
     }
+
+    public void logout(String authorizationHeader) {
+        tokenService.logout(authorizationHeader);
+    }
 }

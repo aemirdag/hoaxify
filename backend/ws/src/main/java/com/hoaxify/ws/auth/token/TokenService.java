@@ -7,4 +7,6 @@ public interface TokenService {
     public Token createToken(User user, Credentials credentials);
 
     public User verifyToken(String authorizationHeader);
+
+    public void logout(String authorizationHeader);
 }

@@ -62,4 +62,8 @@ public class TokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    private String getTokenWithPrefix() {
+        return null;
+    }
 }

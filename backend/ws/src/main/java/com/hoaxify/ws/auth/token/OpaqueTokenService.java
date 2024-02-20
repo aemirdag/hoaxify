@@ -37,4 +37,24 @@ public class OpaqueTokenService implements TokenService {
         Optional<Token> tokenInDB = tokenRepository.findById(token);
         return tokenInDB.map(Token::getUser).orElse(null);
     }
+
+    @Override
+    public void logout(String authorizationHeader) {
+        Optional<Token> tokenInDB = getToken(authorizationHeader);
+
+        if (tokenInDB.isEmpty()) {
+            return;
+        }
+
+        tokenRepository.delete(tokenInDB.get());
+    }
+
+    private Optional<Token> getToken(String authorizationHeader) {
+        if (Objects.isNull(authorizationHeader) || authorizationHeader.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String token = authorizationHeader.split(" ")[1];
+        return tokenRepository.findById(token);
+    }
 }

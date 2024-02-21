@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import { ProfileImage } from "@/shared/components/ProfileImage";
 import { UserEditForm } from "@/pages/User/components/ProfileCard/UserEditForm.jsx";
+import { UserDeleteButton } from "@/pages/User/components/ProfileCard/UserDeleteButton/UserDeleteButton.jsx";
 
 export function ProfileCard({ user }) {
   //const authState = useAuthState();
@@ -12,7 +13,7 @@ export function ProfileCard({ user }) {
   const { t } = useTranslation();
   const [tempImage, setTempImage] = useState("");
 
-  const isEditButtonVisible = !isEditMode && authState.id === user.id;
+  const isLoggedInUser = !isEditMode && authState.id === user.id;
   const visibleUsername =
     authState.id === user.id ? authState.username : user.username;
 
@@ -23,8 +24,16 @@ export function ProfileCard({ user }) {
       </div>
       <div className="card-body text-center">
         {!isEditMode && <span className="fs-3 d-block">{visibleUsername}</span>}
-        {isEditButtonVisible && (
-          <Button center text={t("edit")} onClick={() => setIsEditMode(true)} />
+        {isLoggedInUser && (
+          <>
+            <Button
+              center
+              text={t("edit")}
+              onClick={() => setIsEditMode(true)}
+            />
+            <div className={"d-inline m-1"}></div>
+            <UserDeleteButton />
+          </>
         )}
         {isEditMode && (
           <UserEditForm

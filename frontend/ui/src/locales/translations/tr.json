@@ -16,5 +16,7 @@
   "edit": "Düzenle",
   "save": "Kaydet",
   "cancel": "İptal",
-  "profileImage": "Profil Resmi"
+  "profileImage": "Profil Resmi",
+  "delete": "Sil",
+  "confirm": "Emin misin?"
 }

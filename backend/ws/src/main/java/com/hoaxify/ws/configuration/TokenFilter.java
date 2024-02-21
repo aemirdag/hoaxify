@@ -5,6 +5,7 @@ import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,9 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (Objects.nonNull(authorizationHeader) && !authorizationHeader.isEmpty()) {
-            User user = tokenService.verifyToken(authorizationHeader);
+        String tokenWithPrefix = getTokenWithPrefix(request);
+        if (Objects.nonNull(tokenWithPrefix) && !tokenWithPrefix.isEmpty()) {
+            User user = tokenService.verifyToken(tokenWithPrefix);
 
             if (Objects.nonNull(user)) {
                 if (!user.isActive()) {
@@ -63,7 +64,26 @@ public class TokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenWithPrefix() {
-        return null;
+    private String getTokenWithPrefix(HttpServletRequest request) {
+        String tokenWithPrefix = request.getHeader("Authorization");
+        Cookie[] cookies = request.getCookies();
+
+        if (Objects.isNull(cookies)) {
+            return tokenWithPrefix;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (!cookie.getName().equals("hoax-token")) {
+                continue;
+            }
+
+            if (Objects.isNull(cookie.getValue()) || cookie.getValue().isEmpty()) {
+                continue;
+            }
+
+            return "AnyPrefix " + cookie.getValue();
+        }
+
+        return tokenWithPrefix;
     }
 }

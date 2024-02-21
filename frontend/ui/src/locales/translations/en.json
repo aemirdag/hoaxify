@@ -16,5 +16,7 @@
   "edit": "Edit",
   "save": "Save",
   "cancel": "Cancel",
-  "profileImage": "Profile Image"
+  "profileImage": "Profile Image",
+  "delete": "Delete",
+  "confirm": "Are you sure?"
 }

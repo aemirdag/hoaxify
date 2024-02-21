@@ -1,6 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { loadAuthState, storeAuthState } from "@/shared/state/storage.js";
-import { setToken } from "@/lib/http.js";
 
 const authSlice = createSlice({
   name: "auth",
@@ -11,16 +10,12 @@ const authSlice = createSlice({
       state.username = action.payload.user.username;
       state.email = action.payload.user.email;
       state.image = action.payload.user.image;
-
-      setToken(action.payload.token);
     },
     logoutSuccess: (state) => {
       state.id = 0;
       delete state.username;
       delete state.email;
       delete state.image;
-
-      setToken();
     },
     userUpdateSuccess: (state, action) => {
       state.id = action.payload.id;

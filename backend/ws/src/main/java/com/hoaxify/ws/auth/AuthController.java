@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 public class AuthController {
@@ -37,10 +36,24 @@ public class AuthController {
     }
 
     @PostMapping("/api/v1/logout")
-    public GenericMessage handleLogout(@RequestHeader(name = "Authorization", required = false)
-                                       String authorizationHeader) {
-        authService.logout(authorizationHeader);
+    public ResponseEntity<GenericMessage> handleLogout(@RequestHeader(name = "Authorization", required = false) String authorizationHeader,
+                                                       @CookieValue(name = "hoax-token", required = false) String cookieValue) {
+        String tokenWithPrefix = authorizationHeader;
+        if (Objects.nonNull(cookieValue) && !cookieValue.isEmpty()) {
+            tokenWithPrefix = cookieValue;
+        }
 
-        return new GenericMessage("Logout success");
+        authService.logout(tokenWithPrefix);
+
+        ResponseCookie cookie = ResponseCookie
+                .from("hoax-token", "")
+                .path("/")
+                .maxAge(0)
+                .httpOnly(true)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new GenericMessage("Logout success"));
     }
 }

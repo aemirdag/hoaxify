@@ -1,9 +1,12 @@
 package com.hoaxify.ws.user;
 
+import com.hoaxify.ws.auth.token.Token;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -21,4 +24,6 @@ public class User {
     private String password;
     @Lob
     private String image;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Token> tokens;
 }

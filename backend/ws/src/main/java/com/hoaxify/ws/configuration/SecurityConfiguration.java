@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                         (authentication) ->
                                 authentication
                                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/users/{id}")).authenticated()
+                                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/users/{id}")).authenticated()
                                         .anyRequest().permitAll())
                 .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(authEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)

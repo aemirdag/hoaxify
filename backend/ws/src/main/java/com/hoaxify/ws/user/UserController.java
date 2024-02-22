@@ -68,4 +68,13 @@ public class UserController {
 
         return ResponseEntity.ok(userDTO);
     }
+
+    @DeleteMapping("/api/v1/users/{id}")
+    @PreAuthorize("#id == principal.id")
+    public ResponseEntity<GenericMessage> deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+
+        String message = Messages.getMessageForLocale("hoaxify.user.delete");
+        return ResponseEntity.ok(new GenericMessage(message));
+    }
 }
